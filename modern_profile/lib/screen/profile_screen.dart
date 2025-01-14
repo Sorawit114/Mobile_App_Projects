@@ -2,72 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:modern_profile/component/profile_img.dart';
 import 'package:modern_profile/component/profile_menu.dart';
 import 'package:modern_profile/constant/constant.dart';
+import 'package:modern_profile/screen/edit_profile_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  int _selectedItem = 0;
+
+  void _navigationBottomNavBar(int index) {
+    setState(() {
+      _selectedItem = index;
+      print(index);
+    });
+  }
+
+  final List<Widget> _pages = [
+    const Text('Home'),
+    const Edit_Profile_Screen(),
+    const Text('Favorite'),
+    const Text('Settings'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ProfileImg(),
-
-          SizedBox(
-            height: 20,
-          ),
-
-          Text(
-            'Sorawit Kamboonlue',
+      appBar: AppBar(
+        leading: const Icon(
+          Icons.arrow_back_ios_new,
+          size: 20,
+          color: iconPrimaryColor,
+        ),
+        title: Center(
+          child: Text(
+            "Edit Profile",
             style: textTitle,
           ),
-
-          Text('**************@email.com'),
-
+        ),
+        actions: [
+          Icon(
+            Icons.exit_to_app,
+            size: 24,
+            color: iconPrimaryColor,
+          ),
           SizedBox(
-            height: 10,
-          ),
-
-          Container(
-            width: 90,
-            height: 35,
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(25.0),
+            width: 25,
+          )
+        ],
+      ),
+      body: _pages[_selectedItem],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedItem,
+        onTap: _navigationBottomNavBar,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              size: 30,
+              color: iconPrimaryColor,
             ),
-            child: Center(
-              child: Text(
-                'Edit Profile',
-                style: textBtn,
-              ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+              size: 30,
+              color: iconPrimaryColor,
             ),
+            label: 'Edit Profile',
           ),
-
-          //Profile Menu
-          ProfileMenu(
-            title: 'Settings',
-            icon: Icons.settings,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite,
+              size: 30,
+              color: iconPrimaryColor,
+            ),
+            label: 'Favorite',
           ),
-          ProfileMenu(
-            title: 'Home',
-            icon: Icons.home,
-          ),
-          ProfileMenu(
-            title: 'User',
-            icon: Icons.person,
-          ),
-          ProfileMenu(
-            title: 'Data',
-            icon: Icons.article,
-          ),
-          ProfileMenu(
-            title: 'Work',
-            icon: Icons.work,
-          ),
-          ProfileMenu(
-            title: 'Exit',
-            icon: Icons.exit_to_app,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings,
+              size: 30,
+              color: iconPrimaryColor,
+            ),
+            label: 'Settings',
           ),
         ],
       ),
