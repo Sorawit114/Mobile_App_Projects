@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:modern_profile/component/profile_img.dart';
-import 'package:modern_profile/component/profile_menu.dart';
 import 'package:modern_profile/constant/constant.dart';
 import 'package:modern_profile/screen/edit_profile_screen.dart';
+import 'package:modern_profile/screen/favorite_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -24,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final List<Widget> _pages = [
     const Text('Home'),
     const Edit_Profile_Screen(),
-    const Text('Favorite'),
+    const Favorite_Screen(),
     const Text('Settings'),
   ];
 
