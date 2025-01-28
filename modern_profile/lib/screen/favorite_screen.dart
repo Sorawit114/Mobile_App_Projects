@@ -13,7 +13,8 @@ class _FavoriteScreenState extends State<Favorite_Screen> {
   final TextEditingController _controller = TextEditingController();
 
   void _addFavoriteItem() {
-    if (_controller.text.isNotEmpty) {
+    if (_controller.text.isNotEmpty &&
+        !favoriteItems.contains(_controller.text)) {
       setState(() {
         favoriteItems.add(_controller.text);
         _controller.clear();
@@ -24,15 +25,6 @@ class _FavoriteScreenState extends State<Favorite_Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'Favorite Items',
-            style: textTitle,
-          ),
-        ),
-        backgroundColor: bgSecondaryColor,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -81,7 +73,7 @@ class _FavoriteScreenState extends State<Favorite_Screen> {
                       ),
                       title: Text(
                         favoriteItems[index],
-                        style: textSubTitle,
+                        style: textSubTitle.copyWith(color: Colors.white),
                       ),
                       trailing: IconButton(
                         icon: Icon(

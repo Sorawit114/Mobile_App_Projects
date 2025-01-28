@@ -20,6 +20,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  final List<String> _title = ['Home', 'Edit Profile', 'Favorite', 'Setting'];
+
   final List<Widget> _pages = [
     const Text('Home'),
     const Edit_Profile_Screen(),
@@ -31,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: bgSecondaryColor,
         leading: const Icon(
           Icons.arrow_back_ios_new,
           size: 20,
@@ -38,8 +41,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         title: Center(
           child: Text(
-            "Edit Profile",
-            style: textTitle,
+            _title[_selectedItem],
+            style: textTitle.copyWith(color: Colors.white),
           ),
         ),
         actions: [
@@ -55,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: _pages[_selectedItem],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: bgSecondaryColor,
         currentIndex: _selectedItem,
         onTap: _navigationBottomNavBar,
         type: BottomNavigationBarType.fixed,
@@ -92,6 +96,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             label: 'Settings',
           ),
         ],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
       ),
     );
   }
