@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:modern_profile/constant/constant.dart';
 import 'package:modern_profile/screen/edit_profile_screen.dart';
-import 'package:modern_profile/screen/favorite_screen.dart';
+import 'package:modern_profile/screen/favorite_screen.dart'; // Correct import
+import 'package:modern_profile/screen/home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +14,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedItem = 0;
 
+  // สร้างตัวแปรสำหรับเก็บรายการโปรด
+  List<String> favoriteItems = [];
+  List<String> removedItems = [];
+
   void _navigationBottomNavBar(int index) {
     setState(() {
       _selectedItem = index;
@@ -20,17 +25,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  final List<String> _title = ['Home', 'Edit Profile', 'Favorite', 'Setting'];
-
-  final List<Widget> _pages = [
-    const Text('Home'),
-    const Edit_Profile_Screen(),
-    const Favorite_Screen(),
-    const Text('Settings'),
-  ];
+  final List<String> _title = ['Home', 'Edit Profile', 'Favorite', 'Removed'];
 
   @override
   Widget build(BuildContext context) {
+    // สร้าง _pages ภายใน build method
+    final List<Widget> _pages = [
+      HomeScreen(),
+      const Edit_Profile_Screen(),
+      Favorite_Screen(),
+      const Text('Remove'),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: bgSecondaryColor,
@@ -56,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body: _pages[_selectedItem],
+      body: _pages[_selectedItem], // แสดงหน้าแต่ละหน้า
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: bgSecondaryColor,
         currentIndex: _selectedItem,
@@ -93,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               size: 30,
               color: iconPrimaryColor,
             ),
-            label: 'Settings',
+            label: 'Removed',
           ),
         ],
         selectedItemColor: Colors.white,
