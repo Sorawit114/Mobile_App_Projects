@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:mytravel/Widget/Destination.dart';
+import 'package:mytravel/Widget/Icon_tab.dart';
+import 'package:mytravel/Widget/SearchBar.dart';
+import 'package:mytravel/Widget/profile.dart';
 import 'package:mytravel/constants/colors.dart';
 import 'package:mytravel/models/data.dart';
 
@@ -8,114 +13,93 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Row - Top Destinations
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Text(
-                  'Top Destinations',
-                  style: TextStyle(
-                      fontSize: 25,
-                      color: secondaryColors,
-                      fontWeight: FontWeight.w600),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.tune,
-                  size: 25,
-                  color: iconprimaryColors,
-                ),
-              ],
-            ),
-          ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Row 1 - Proflie image
+              ProfileWideget(),
 
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+              SizedBox(
+                height: 15,
               ),
-              padding: const EdgeInsets.all(10),
-              itemCount: destinations.length,
-              itemBuilder: (context, index) {
-                final destination = destinations[index];
 
-                return Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              //Row 2
+              Text('Point of Interest',
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: primaryColors, fontWeight: FontWeight.bold)),
+
+              SizedBox(
+                height: 15,
+              ),
+
+              //ROW 3 - SearchBar
+              const Search_Bar(),
+
+              SizedBox(
+                height: 15,
+              ),
+
+              //ROW 4
+              Icontab(),
+
+              SizedBox(
+                height: 15,
+              ),
+
+              //ROW 5
+              Row(
+                children: [
+                  Text(
+                    'Top Destination',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: primaryColors,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          destination.image,
-                          fit: BoxFit.cover,
-                          height: 300,
-                          width: double.infinity,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              destination.name,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_pin,
-                                  color: animalColor,
-                                  size: 16,
-                                ),
-                                Text(
-                                  destination.location,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                  size: 16,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  destination.rate,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Spacer(),
+                  Icon(
+                    Icons.tune,
+                    size: 25,
+                    color: secondaryColors,
                   ),
-                );
-              },
-            ),
+                ],
+              ),
+
+              SizedBox(
+                height: 15,
+              ),
+
+              //Row 6 - Display images
+              GridView.count(
+                crossAxisCount: 2,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 24,
+                mainAxisSpacing: 24,
+                children: List.generate(destinations.length, (index) {
+                  var e = destinations[index];
+
+                  return AnimationConfiguration.staggeredGrid(
+                      position: index,
+                      columnCount: 2,
+                      child: SlideAnimation(
+                          child: FadeInAnimation(
+                              child: DestinationWidget(
+                                  name: e.name,
+                                  image: e.image,
+                                  rate: e.rate,
+                                  location: e.location))));
+                }),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

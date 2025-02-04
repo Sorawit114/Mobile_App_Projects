@@ -7,14 +7,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> images = List.generate(
-      5, (index) => "https://picsum.photos/500?random=${index + 1}");
+      10, (index) => "https://picsum.photos/500?random=${index + 1}");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
       body: ListView.builder(
         itemCount: images.length,
         itemBuilder: (context, index) {
@@ -29,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child:
-                    Image.network(images[index], height: 500, fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
+                child: Image.network(images[index],
+                    height: 250, fit: BoxFit.fitHeight,
+                    loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
                     return child;
                   } else {

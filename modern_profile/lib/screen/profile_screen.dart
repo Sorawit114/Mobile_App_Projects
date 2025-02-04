@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.settings,
+              Icons.delete,
               size: 30,
               color: iconPrimaryColor,
             ),
