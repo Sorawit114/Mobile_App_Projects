@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:mytravel/constants/colors.dart';
 
 class Icon_edit extends StatelessWidget {
   const Icon_edit({
