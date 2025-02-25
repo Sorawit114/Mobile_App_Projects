@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mytravel/Widget/mybutton.dart';
-import 'package:mytravel/Widget/mytextfield.dart';
-import 'package:mytravel/constants/colors.dart';
-import 'package:mytravel/screens/sign_up_screen.dart';
+import '../Widget/mybutton.dart';
+import '../Widget/mytextfield.dart';
+import '../constants/colors.dart';
+import '../screens/sign_up_screen.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
@@ -107,6 +107,13 @@ class SignInPage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [],
             ),
             SizedBox(
               height: 20,

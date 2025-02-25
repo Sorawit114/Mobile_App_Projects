@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mytravel/constants/colors.dart';
-import 'package:mytravel/screens/sign_in_screen.dart';
+import '../constants/colors.dart';
+import '../screens/sign_in_screen.dart';
 import '../Widget/mybutton.dart';
 import '../Widget/mytextfield.dart';
 

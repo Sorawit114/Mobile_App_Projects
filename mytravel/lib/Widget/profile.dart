@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mytravel/constants/colors.dart';
+import '../constants/colors.dart';
 
 class ProfileWideget extends StatelessWidget {
   const ProfileWideget({

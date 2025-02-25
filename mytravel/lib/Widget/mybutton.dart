@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mytravel/constants/colors.dart';
+import '../constants/colors.dart';
 
 class MyButton extends StatelessWidget {
   const MyButton({

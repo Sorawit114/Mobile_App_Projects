@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mytravel/Widget/Icon_edit.dart';
-import 'package:mytravel/constants/colors.dart';
+import '../Widget/Icon_edit.dart';
+import '../constants/colors.dart';
 
 class Icontab extends StatelessWidget {
   const Icontab({
@@ -39,6 +39,12 @@ class Icontab extends StatelessWidget {
           title: 'Ocean',
           color: oceanColor,
           icon: Icons.water,
+        ),
+        Spacer(),
+        Icon_edit(
+          title: 'Cars',
+          color: Colors.purple,
+          icon: Icons.car_repair,
         ),
         Spacer(),
       ],

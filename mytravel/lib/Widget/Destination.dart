@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:mytravel/constants/colors.dart';
+import '../constants/colors.dart';
 
 class DestinationWidget extends StatelessWidget {
   const DestinationWidget(

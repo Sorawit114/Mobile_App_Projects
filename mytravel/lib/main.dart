@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mytravel/onboardingScreen.dart';
-import 'package:mytravel/screens/sign_in_screen.dart';
-import 'package:mytravel/screens/sign_up_screen.dart';
+import '../onboardingScreen.dart';
+import '../screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool show = true;
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.lexendTextTheme()),
       title: 'My Travel 1.0',
-      home: show ? OnboardingScreen() : SignInPage(),
+      home: show ? OnboardingScreen() : HomeScreen(),
     );
   }
 }
