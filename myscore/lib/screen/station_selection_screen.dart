@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Widget/color.dart';
 import '../models/station_data.dart';
 
 class StationSelectionScreen extends StatefulWidget {
@@ -10,6 +11,15 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
   String? filterColor;
   String searchQuery = '';
   List<String> filteredStations = stations.keys.toList();
+
+  @override
+  void initState() {
+    super.initState();
+    // กำหนดค่าเริ่มต้นของ filterColor เป็นสายสีแรกที่อยู่ใน stations
+    filterColor = stations.values.first;
+    // เรียก filterStations เพื่อกรองสถานีโดยอัตโนมัติ
+    filterStations(filterColor!);
+  }
 
   void filterStations(String color) {
     setState(() {
@@ -39,43 +49,36 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
     });
   }
 
-  Color getStationColor(String station) {
-    return stations[station] != null
-        ? getColorByLine(stations[station]!)
-        : Colors.black;
-  }
+  final Map<String, String> lineNames = {
+    'สายสีเขียว': 'BTS',
+    'สายสีเขียวเข้ม': 'BTS',
+    'สายสีน้ำเงิน': 'MRT',
+    'สายสีม่วง': 'MRT',
+    'สายสีส้ม': 'ARL',
+    'สายสีทอง': 'BTS-G',
+    'สายสีแดง': 'SRTET',
+    'สายสีแดงอ่อน': 'SRTET',
+    'สายสีเหลือง': 'Yellow\nLine',
+    'สายสีชมพู': 'Pink\nLine',
+  };
 
-  Color getColorByLine(String line) {
-    switch (line) {
-      case 'สายสีเขียว':
-        return Colors.green;
-      case 'สายสีเขียวเข้ม':
-        return Colors.greenAccent;
-      case 'สายสีน้ำเงิน':
-        return Colors.blue;
-      case 'สายสีม่วง':
-        return Colors.purple;
-      case 'สายสีส้ม':
-        return Colors.orange;
-      case 'สายสีทอง':
-        return Colors.amber;
-      case 'สายสีแดง':
-        return Colors.red;
-      case 'สายสีแดงอ่อน':
-        return Colors.redAccent;
-      case 'สายสีเหลือง':
-        return Colors.yellow;
-      case 'สายสีชมพู':
-        return Colors.pink;
-      default:
-        return Colors.black;
-    }
-  }
+  Map<String, String> Nameline = {
+    'สายสีเขียว': 'สายสีเขียวสุขุมวิท',
+    'สายสีเขียวเข้ม': 'สายสีเขียวสีลม',
+    'สายสีน้ำเงิน': 'สายสีน้ำเงิน',
+    'สายสีม่วง': 'สายสีม่วง',
+    'สายสีส้ม': 'แอร์พอร์ต เรล ลิงก์',
+    'สายสีทอง': 'สายสีทอง',
+    'สายสีแดง': 'สายสีแดงเข้ม',
+    'สายสีแดงอ่อน': 'สายสีแดงอ่อน',
+    'สายสีเหลือง': 'สายสีเหลือง',
+    'สายสีชมพู': 'สายสีชมพู',
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('เลือกสถานี')),
+      appBar: AppBar(title: Center(child: Text('ข้อมูลสถานี'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -83,72 +86,108 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
             TextField(
               decoration: InputDecoration(
                 labelText: 'ค้นหาสถานี',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.grey), // ปรับสีของ label
+                prefixIcon:
+                    Icon(Icons.search, color: Colors.grey), // วางไอคอนทางซ้าย
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 15.0), // ปรับระยะห่างภายในช่องค้นหา
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // ขอบมน
+                  borderSide:
+                      BorderSide(color: Colors.grey, width: 1.0), // ขอบสีเทา
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // ขอบมนเหมือนกัน
+                  borderSide:
+                      BorderSide(color: Colors.grey, width: 1.0), // ขอบสีเทา
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // ขอบมนเมื่อเลือก
+                  borderSide: BorderSide(
+                      color: Colors.blue, width: 2.0), // ขอบสีน้ำเงินเมื่อเลือก
+                ),
               ),
               onChanged: searchStations,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('เลือกเส้นทางรถไฟ'),
+              ],
+            ),
+            SizedBox(height: 16),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.green),
-                    onPressed: () => filterStations('สายสีเขียว'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.greenAccent),
-                    onPressed: () => filterStations('สายสีเขียวเข้ม'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.blue),
-                    onPressed: () => filterStations('สายสีน้ำเงิน'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.purple),
-                    onPressed: () => filterStations('สายสีม่วง'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.orange),
-                    onPressed: () => filterStations('สายสีส้ม'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.amber),
-                    onPressed: () => filterStations('สายสีทอง'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.red),
-                    onPressed: () => filterStations('สายสีแดง'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.redAccent),
-                    onPressed: () => filterStations('สายสีแดงอ่อน'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.yellow),
-                    onPressed: () => filterStations('สายสีเหลือง'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.circle, color: Colors.pink),
-                    onPressed: () => filterStations('สายสีชมพู'),
-                  ),
-                ],
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: stations.values.toSet().map((colorName) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: GestureDetector(
+                      onTap: () => filterStations(colorName),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 65,
+                                color: ColorUtils.getColorByLine(colorName),
+                              ),
+                              Positioned(
+                                child: Center(
+                                  child: Text(
+                                    lineNames[colorName] ?? colorName,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
+            // แสดงชื่อสายที่กรองได้
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  filterColor != null
+                      ? Nameline[filterColor] ?? ''
+                      : 'กรุณาเลือกสาย',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 itemCount: filteredStations.length,
                 itemBuilder: (context, index) {
+                  String station = filteredStations[index];
                   return ListTile(
                     title: Text(
-                      filteredStations[index],
+                      station,
                       style: TextStyle(
-                          color: getStationColor(filteredStations[index])),
+                        color: ColorUtils.getColorByLine(stations[station]!),
+                      ),
                     ),
+                    subtitle: Text(stations[station]!),
                     onTap: () {
-                      Navigator.pop(context, filteredStations[index]);
+                      Navigator.pop(context, station);
                     },
                   );
                 },
