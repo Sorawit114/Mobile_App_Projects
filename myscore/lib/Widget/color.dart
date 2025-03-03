@@ -10,7 +10,7 @@ class ColorUtils {
     'สายสีทอง': Colors.amber,
     'สายสีแดง': Colors.red,
     'สายสีแดงอ่อน': Colors.redAccent,
-    'สายสีเหลือง': Colors.yellow,
+    'สายสีเหลือง': const Color.fromARGB(255, 243, 219, 0),
     'สายสีชมพู': Colors.pink,
   };
 

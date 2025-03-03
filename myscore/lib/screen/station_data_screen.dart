@@ -34,11 +34,9 @@ class _StationDataScreenState extends State<StationDataScreen> {
   void searchStations(String query) {
     setState(() {
       searchQuery = query.toLowerCase();
-      if (filterColor != null) {
+      if (searchQuery.isEmpty) {
         filteredStations = stations.entries
-            .where((entry) =>
-                entry.value == filterColor &&
-                entry.key.toLowerCase().contains(searchQuery))
+            .where((entry) => entry.value == filterColor)
             .map((entry) => entry.key)
             .toList();
       } else {
