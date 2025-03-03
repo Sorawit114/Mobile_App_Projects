@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       if (isFromStation) {
         fromStation = selectedStation;
-        toStation = null; // Reset ปลายทางเมื่อเปลี่ยนต้นทาง
+        toStation = null;
         fare = 0.0;
       } else {
         toStation = selectedStation;
@@ -105,7 +105,6 @@ class HomeScreenContent extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // สถานีต้นทาง
             GestureDetector(
               onTap: () async {
                 final selectedStation = await Navigator.push(
@@ -145,7 +144,6 @@ class HomeScreenContent extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 5),
               child: Icon(Icons.more_vert, color: Colors.grey),
             ),
-            // สถานีปลายทาง
             GestureDetector(
               onTap: () async {
                 final selectedStation = await Navigator.push(

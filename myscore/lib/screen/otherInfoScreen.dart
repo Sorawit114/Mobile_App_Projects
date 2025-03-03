@@ -86,9 +86,7 @@ class MenuItem extends StatelessWidget {
       leading: Icon(icon, color: Colors.blue),
       title: Text(text),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // ใส่โค้ด navigation ไปยังหน้าที่เกี่ยวข้อง
-      },
+      onTap: () {},
     );
   }
 }

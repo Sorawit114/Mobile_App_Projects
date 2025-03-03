@@ -28,7 +28,6 @@ class StationDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ 2. จุดเชื่อมต่อ (แสดงเฉพาะถ้ามี)
             if (connections != null && connections.isNotEmpty) ...[
               Text(
                 'จุดเชื่อมต่อ',
@@ -45,8 +44,6 @@ class StationDetailScreen extends StatelessWidget {
               ),
               Divider(height: 30, thickness: 2),
             ],
-
-            // ✅ 3. สิ่งอำนวยความสะดวก
             Text(
               'สิ่งอำนวยความสะดวก',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -61,10 +58,7 @@ class StationDetailScreen extends StatelessWidget {
                 _buildFacility(Icons.local_parking, 'ที่จอดรถ'),
               ],
             ),
-
             Divider(height: 30, thickness: 2),
-
-            // ✅ 4. ข้อมูลทางออก
             Text(
               'ข้อมูลทางออก',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -77,7 +71,6 @@ class StationDetailScreen extends StatelessWidget {
     );
   }
 
-  // 🔹 ฟังก์ชันสร้างไอคอนของสิ่งอำนวยความสะดวก
   Widget _buildFacility(IconData icon, String label) {
     return Column(
       children: [
@@ -88,7 +81,6 @@ class StationDetailScreen extends StatelessWidget {
     );
   }
 
-  // 🔹 ฟังก์ชันสร้างข้อมูลทางออก
   Widget _buildExitInfo() {
     return Column(
       children: [
