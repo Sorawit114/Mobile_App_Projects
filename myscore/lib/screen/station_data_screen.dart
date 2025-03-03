@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:myscore/models/stationConnections.dart';
+import 'package:myscore/screen/station_detail_screen.dart';
 import '../Widget/color.dart';
 import '../models/station_data.dart';
 
-class StationSelectionScreen extends StatefulWidget {
+class StationDataScreen extends StatefulWidget {
   @override
-  _StationSelectionScreenState createState() => _StationSelectionScreenState();
+  _StationDataScreenState createState() => _StationDataScreenState();
 }
 
-class _StationSelectionScreenState extends State<StationSelectionScreen> {
+class _StationDataScreenState extends State<StationDataScreen> {
   String? filterColor;
   String searchQuery = '';
   List<String> filteredStations = stations.keys.toList();
@@ -76,7 +78,7 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('ค้นหาสถานี'))),
+      appBar: AppBar(title: Center(child: Text('ข้อมูลสถานี'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -179,7 +181,16 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
                     ),
                     subtitle: Text(stations[station]!),
                     onTap: () {
-                      Navigator.pop(context, station);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StationDetailScreen(
+                            stationName: station,
+                            lineColor: stations[station]!,
+                            routeStations: stationConnections[station] ?? [],
+                          ),
+                        ),
+                      );
                     },
                   );
                 },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myscore/screen/otherInfoScreen.dart';
+import '../screen/otherInfoScreen.dart';
+import '../screen/station_data_screen.dart';
 import '../screen/station_selection_screen.dart';
 import '../models/station_data.dart';
 
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
         fare: fare,
         onStationSelected: updateStations,
       ),
-      StationSelectionScreen(),
+      StationDataScreen(),
       OtherInfoScreen(),
     ];
 
@@ -181,24 +182,23 @@ class HomeScreenContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // แสดงค่าโดยสาร
+            Expanded(
+              child: InteractiveViewer(
+                panEnabled: true,
+                minScale: 0.1,
+                maxScale: 4.0,
+                child: Image.asset(
+                  'assets/test.jpg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
             Text(
               'ค่าโดยสาร: ${fare.toStringAsFixed(2)} บาท',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
-              ),
-            ),
-            Expanded(
-              child: InteractiveViewer(
-                panEnabled: true,
-                minScale: 0.1, // ซูมออก
-                maxScale: 4.0, // ซูมเข้า
-                child: Image.asset(
-                  'assets/test.jpg',
-                  fit: BoxFit.contain, // ให้ภาพไม่เสียสัดส่วน
-                ),
               ),
             ),
           ],
