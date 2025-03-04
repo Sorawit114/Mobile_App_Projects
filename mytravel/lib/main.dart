@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mytravel/screens/sign_in_screen.dart';
 import '../onboardingScreen.dart';
 import '../screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 bool show = true;
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   show = prefs.getBool("ON_BOARDING") ?? true;
   runApp(const MyApp());
@@ -21,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.lexendTextTheme()),
       title: 'My Travel 1.0',
-      home: show ? OnboardingScreen() : HomeScreen(),
+      home: show ? OnboardingScreen() : SignInPage(),
     );
   }
 }

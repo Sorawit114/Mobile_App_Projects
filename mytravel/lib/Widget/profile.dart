@@ -1,10 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mytravel/onboardingScreen.dart';
 import '../constants/colors.dart';
 
 class ProfileWideget extends StatelessWidget {
   const ProfileWideget({
     super.key,
   });
+
+  Future<void> singOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +29,13 @@ class ProfileWideget extends StatelessWidget {
           ],
         ),
         Spacer(),
-        Icon(
-          Icons.menu,
-          size: 25.0,
-          color: secondaryColors,
+        IconButton(
+          onPressed: () => singOut(context),
+          icon: Icon(
+            Icons.logout_outlined,
+            size: 25.0,
+            color: secondaryColors,
+          ),
         ),
       ],
     );
