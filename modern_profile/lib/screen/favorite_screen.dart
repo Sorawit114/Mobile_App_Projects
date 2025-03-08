@@ -44,13 +44,13 @@ class _FavoriteScreenState extends State<Favorite_Screen> {
             ),
             ElevatedButton(
               onPressed: _addFavoriteItem,
-              child: Text('Add to Favorites'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: iconPrimaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
+              child: Text('Add to Favorites'),
             ),
             Expanded(
               child: ListView.builder(

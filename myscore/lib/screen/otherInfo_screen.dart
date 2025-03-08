@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import '../screen/aboutbkk_screen.dart';
+import '../screen/trainplan_screen.dart';
+import '../screen/feedback_screen.dart';
+import '../screen/language_screen.dart';
+import '../screen/map_screen.dart';
+import '../screen/parking_screen.dart';
 
 class OtherInfoScreen extends StatefulWidget {
+  const OtherInfoScreen({super.key});
+
   @override
   _OtherInfoScreenState createState() => _OtherInfoScreenState();
 }
@@ -9,12 +17,14 @@ class _OtherInfoScreenState extends State<OtherInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Center(
           child: const Text(
             'ข้อมูลอื่นๆ',
           ),
         ),
+        backgroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -40,16 +50,32 @@ class _OtherInfoScreenState extends State<OtherInfoScreen> {
             child: ListView(
               children: const [
                 SectionTitle(title: 'รายละเอียดอื่นๆ'),
-                MenuItem(icon: Icons.info, text: 'เกี่ยวกับ BKK Rail'),
-                MenuItem(icon: Icons.map, text: 'แผนงานรถไฟฟ้า'),
+                MenuItem(
+                    icon: Icons.info,
+                    text: 'เกี่ยวกับ BKK Rail',
+                    nextScreen: AboutBkkRailScreen()),
+                MenuItem(
+                    icon: Icons.map,
+                    text: 'แผนงานรถไฟฟ้า',
+                    nextScreen: TrainPlanScreen()),
                 MenuItem(
                     icon: Icons.directions_transit,
-                    text: 'แผนที่ระบบขนส่งมวลชนทางราง'),
-                MenuItem(icon: Icons.local_parking, text: 'ลานจอดรถ'),
-                MenuItem(icon: Icons.comment, text: 'แสดงความคิดเห็น'),
+                    text: 'แผนที่ระบบขนส่งมวลชนทางราง',
+                    nextScreen: MapScreen()),
+                MenuItem(
+                    icon: Icons.local_parking,
+                    text: 'ลานจอดรถ',
+                    nextScreen: ParkingScreen()),
+                MenuItem(
+                    icon: Icons.comment,
+                    text: 'แสดงความคิดเห็น',
+                    nextScreen: FeedbackScreen()),
                 Divider(),
                 SectionTitle(title: 'ตั้งค่าระบบ'),
-                MenuItem(icon: Icons.language, text: 'ภาษา / Language'),
+                MenuItem(
+                    icon: Icons.language,
+                    text: 'ภาษา / Language',
+                    nextScreen: LanguageScreen()),
               ],
             ),
           ),
@@ -78,7 +104,13 @@ class SectionTitle extends StatelessWidget {
 class MenuItem extends StatelessWidget {
   final IconData icon;
   final String text;
-  const MenuItem({super.key, required this.icon, required this.text});
+  final Widget nextScreen;
+
+  const MenuItem(
+      {super.key,
+      required this.icon,
+      required this.text,
+      required this.nextScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +118,16 @@ class MenuItem extends StatelessWidget {
       leading: Icon(icon, color: Colors.blue),
       title: Text(text),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {},
+      onTap: () {
+        // เมื่อกดที่เมนูนี้จะนำทางไปยังหน้าถัดไป
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                nextScreen, // นำทางไปยังหน้าที่แตกต่างกันตามเมนู
+          ),
+        );
+      },
     );
   }
 }

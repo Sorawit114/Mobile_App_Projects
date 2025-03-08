@@ -6,6 +6,8 @@ void main() {
 }
 
 class BKKRailApp extends StatelessWidget {
+  const BKKRailApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

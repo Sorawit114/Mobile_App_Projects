@@ -7,7 +7,8 @@ class StationDetailScreen extends StatelessWidget {
   final String lineColor;
   final List<String> routeStations;
 
-  StationDetailScreen({
+  const StationDetailScreen({
+    super.key,
     required this.stationName,
     required this.lineColor,
     required this.routeStations,
@@ -19,6 +20,7 @@ class StationDetailScreen extends StatelessWidget {
     List<String>? connections = stationConnections[stationName];
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(stationName),
         backgroundColor: mainColor,

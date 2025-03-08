@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import '../screen/otherInfoScreen.dart';
+import 'package:myscore/models/stationConnections.dart';
+import 'package:myscore/screen/otherInfo_screen.dart';
 import '../screen/station_data_screen.dart';
 import '../screen/station_selection_screen.dart';
 import '../models/station_data.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -31,10 +34,89 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   double calculateFare(String from, String to) {
+    if (!stations.containsKey(from) || !stations.containsKey(to)) {
+      return 0.0;
+    }
+
+    List<String> fromLines = getStationLines(from);
+    List<String> toLines = getStationLines(to);
+
+    double minFare = double.infinity;
+
+    for (String fromLine in fromLines) {
+      for (String toLine in toLines) {
+        print(fromLine + " " + toLine);
+        double fare;
+        if (fromLine == toLine) {
+          fare = calculateSingleLineFare(fromLine, from, to);
+        } else {
+          fare = calculateMultiLineFare(from, to, fromLine, toLine);
+        }
+
+        if (fare < minFare) {
+          minFare = fare;
+        }
+      }
+    }
+
+    return minFare == double.infinity ? 0.0 : minFare;
+  }
+
+  List<String> getStationLines(String station) {
+    if (stations.containsKey(station)) {
+      return [stations[station]!];
+    }
+    return ["unknown"];
+  }
+
+  double calculateSingleLineFare(String line, String from, String to) {
     int fromIndex = stations.keys.toList().indexOf(from);
     int toIndex = stations.keys.toList().indexOf(to);
     int stationDistance = (toIndex - fromIndex).abs();
-    return 15.0 + stationDistance - 1;
+
+    if (line.contains("สายสีเขียว")) {
+      return (18 + stationDistance).clamp(18, 62).toDouble();
+    } else if (line.contains("สายสีน้ำเงิน")) {
+      return (17 + stationDistance).clamp(17, 45).toDouble();
+    } else if (line.contains("สายสีม่วง")) {
+      return (14 + stationDistance).clamp(14, 20).toDouble();
+    } else if (line.contains("สายสีแดง")) {
+      return 20.0;
+    } else if (line.contains("สายสีทอง")) {
+      return 16.0;
+    } else if (line.contains("สายสีเหลือง")) {
+      return (15 + stationDistance).clamp(15, 45).toDouble();
+    } else if (line.contains("ARL")) {
+      return (15 + stationDistance).clamp(15, 45).toDouble();
+    }
+
+    return 0.0;
+  }
+
+  double calculateMultiLineFare(
+      String from, String to, String fromLine, String toLine) {
+    double minFare = double.infinity;
+    String? bestTransferStation;
+
+    for (var transferStation in stationConnections.keys) {
+      if (stationConnections[transferStation]!.contains(fromLine) &&
+          stationConnections[transferStation]!.contains(toLine)) {
+        double fare1 = calculateSingleLineFare(fromLine, from, transferStation);
+        double fare2 = calculateSingleLineFare(toLine, transferStation, to);
+        double totalFare = fare1 + fare2;
+
+        if (totalFare < minFare) {
+          minFare = totalFare;
+          bestTransferStation = transferStation;
+        }
+      }
+    }
+
+    if (bestTransferStation != null) {
+      return minFare;
+    } else {
+      return 0.0;
+    }
   }
 
   void _onItemTapped(int index) {
@@ -45,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _screens = [
+    final List<Widget> screens = [
       HomeScreenContent(
         fromStation: fromStation,
         toStation: toStation,
@@ -57,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -100,7 +182,11 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("เลือกเส้นทาง")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text("เลือกเส้นทาง"),
+        backgroundColor: Colors.white,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -183,14 +269,15 @@ class HomeScreenContent extends StatelessWidget {
             Expanded(
               child: InteractiveViewer(
                 panEnabled: true,
-                minScale: 0.1,
-                maxScale: 4.0,
+                minScale: 1.0,
+                maxScale: 10.0,
                 child: Image.asset(
                   'assets/test.jpg',
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
+            const SizedBox(height: 10),
             Text(
               'ค่าโดยสาร: ${fare.toStringAsFixed(2)} บาท',
               style: const TextStyle(
@@ -199,6 +286,7 @@ class HomeScreenContent extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     // สร้าง _pages ภายใน build method
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       HomeScreen(),
       const Edit_Profile_Screen(),
       Favorite_Screen(),
@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body: _pages[_selectedItem], // แสดงหน้าแต่ละหน้า
+      body: pages[_selectedItem], // แสดงหน้าแต่ละหน้า
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: bgSecondaryColor,
         currentIndex: _selectedItem,

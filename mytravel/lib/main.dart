@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mytravel/screens/sign_in_screen.dart';
 import '../onboardingScreen.dart';
-import '../screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:firebase_core/firebase_core.dart';

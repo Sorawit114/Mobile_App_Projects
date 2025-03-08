@@ -5,6 +5,8 @@ import '../Widget/color.dart';
 import '../models/station_data.dart';
 
 class StationDataScreen extends StatefulWidget {
+  const StationDataScreen({super.key});
+
   @override
   _StationDataScreenState createState() => _StationDataScreenState();
 }
@@ -76,7 +78,11 @@ class _StationDataScreenState extends State<StationDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('ข้อมูลสถานี'))),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Center(child: Text('ข้อมูลสถานี')),
+        backgroundColor: Colors.white,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

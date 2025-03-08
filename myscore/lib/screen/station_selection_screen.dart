@@ -3,6 +3,8 @@ import '../Widget/color.dart';
 import '../models/station_data.dart';
 
 class StationSelectionScreen extends StatefulWidget {
+  const StationSelectionScreen({super.key});
+
   @override
   _StationSelectionScreenState createState() => _StationSelectionScreenState();
 }
@@ -74,6 +76,7 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(title: Center(child: Text('ค้นหาสถานี'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
