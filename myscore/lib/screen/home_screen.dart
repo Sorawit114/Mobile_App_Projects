@@ -273,7 +273,7 @@ class HomeScreenContent extends StatelessWidget {
                 maxScale: 10.0,
                 child: Image.asset(
                   'assets/test.jpg',
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

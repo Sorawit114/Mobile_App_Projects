@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myscore/models/stationConnections.dart';
 import 'package:myscore/screen/station_detail_screen.dart';
 import '../Widget/color.dart';
@@ -12,21 +13,35 @@ class StationDataScreen extends StatefulWidget {
 }
 
 class _StationDataScreenState extends State<StationDataScreen> {
+  String selectedLanguage = "ภาษาไทย";
   String? filterColor;
   String searchQuery = '';
-  List<String> filteredStations = stations.keys.toList();
+  late Map<String, String> stationNames;
+  List<String> filteredStations = [];
+  late Future<void> _initDataFuture;
 
   @override
   void initState() {
     super.initState();
-    filterColor = stations.values.first;
-    filterStations(filterColor!);
+    _initDataFuture = _loadLanguagePreference();
+  }
+
+  // Load language preference from shared preferences
+  Future<void> _loadLanguagePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String language = prefs.getString('selectedLanguage') ?? "ภาษาไทย";
+    setState(() {
+      selectedLanguage = language;
+      stationNames = selectedLanguage == "ภาษาไทย" ? stations : stationsE;
+      filterColor = stationNames.values.first;
+      filterStations(filterColor!);
+    });
   }
 
   void filterStations(String color) {
     setState(() {
       filterColor = color;
-      filteredStations = stations.entries
+      filteredStations = stationNames.entries
           .where((entry) => entry.value == color)
           .map((entry) => entry.key)
           .toList();
@@ -37,12 +52,9 @@ class _StationDataScreenState extends State<StationDataScreen> {
     setState(() {
       searchQuery = query.toLowerCase();
       if (searchQuery.isEmpty) {
-        filteredStations = stations.entries
-            .where((entry) => entry.value == filterColor)
-            .map((entry) => entry.key)
-            .toList();
+        filterStations(filterColor!);
       } else {
-        filteredStations = stations.keys.where((station) {
+        filteredStations = stationNames.keys.where((station) {
           return station.toLowerCase().contains(searchQuery);
         }).toList();
       }
@@ -77,68 +89,67 @@ class _StationDataScreenState extends State<StationDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Center(child: Text('ข้อมูลสถานี')),
-        backgroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'ค้นหาสถานี',
-                labelStyle: TextStyle(color: Colors.grey),
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-              ),
-              onChanged: searchStations,
+    return FutureBuilder(
+      future: _initDataFuture, // Wait for the language preference to be loaded
+      builder: (context, snapshot) {
+        // If the data hasn't been loaded yet, show a loading indicator
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              title: Center(child: Text('ข้อมูลสถานี')),
+              backgroundColor: Colors.white,
             ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // If the data is loaded, display the actual content
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Center(child: Text('ข้อมูลสถานี')),
+            backgroundColor: Colors.white,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                Text('เลือกเส้นทางรถไฟ'),
-              ],
-            ),
-            SizedBox(height: 16),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: stations.values.toSet().map((colorName) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: GestureDetector(
-                      onTap: () => filterStations(colorName),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 65,
-                                color: ColorUtils.getColorByLine(colorName),
-                              ),
-                              Positioned(
-                                child: Center(
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'ค้นหาสถานี',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                  ),
+                  onChanged: searchStations,
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Text('เลือกเส้นทางรถไฟ')],
+                ),
+                SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: stationNames.values.toSet().map((colorName) {
+                      return GestureDetector(
+                        onTap: () => filterStations(colorName),
+                        child: Column(
+                          children: [
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  size: 65,
+                                  color: ColorUtils.getColorByLine(colorName),
+                                ),
+                                Center(
                                   child: Text(
                                     lineNames[colorName] ?? colorName,
                                     style: TextStyle(
@@ -148,61 +159,63 @@ class _StationDataScreenState extends State<StationDataScreen> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      filterColor != null
+                          ? Nameline[filterColor] ?? ''
+                          : 'กรุณาเลือกสาย',
+                      style: TextStyle(fontSize: 18),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  filterColor != null
-                      ? Nameline[filterColor] ?? ''
-                      : 'กรุณาเลือกสาย',
-                  style: TextStyle(fontSize: 18),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredStations.length,
+                    itemBuilder: (context, index) {
+                      String station = filteredStations[index];
+                      return ListTile(
+                        title: Text(
+                          station,
+                          style: TextStyle(
+                            color: ColorUtils.getColorByLine(
+                                stationNames[station]!),
+                          ),
+                        ),
+                        subtitle: Text(stationNames[station]!),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StationDetailScreen(
+                                stationName: station,
+                                lineColor: stationNames[station]!,
+                                routeStations:
+                                    stationConnections[station] ?? [],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredStations.length,
-                itemBuilder: (context, index) {
-                  String station = filteredStations[index];
-                  return ListTile(
-                    title: Text(
-                      station,
-                      style: TextStyle(
-                        color: ColorUtils.getColorByLine(stations[station]!),
-                      ),
-                    ),
-                    subtitle: Text(stations[station]!),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StationDetailScreen(
-                            stationName: station,
-                            lineColor: stations[station]!,
-                            routeStations: stationConnections[station] ?? [],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
