@@ -15,8 +15,9 @@ class StationDataScreen extends StatefulWidget {
 class _StationDataScreenState extends State<StationDataScreen> {
   String selectedLanguage = "ภาษาไทย";
   String? filterColor;
-  String searchQuery = '';
+  String searchQuery = '', datastation = '', choose = '', search = '';
   late Map<String, String> stationNames;
+  Map<String, String> Namelinename = {};
   List<String> filteredStations = [];
   late Future<void> _initDataFuture;
 
@@ -26,13 +27,20 @@ class _StationDataScreenState extends State<StationDataScreen> {
     _initDataFuture = _loadLanguagePreference();
   }
 
-  // Load language preference from shared preferences
   Future<void> _loadLanguagePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String language = prefs.getString('selectedLanguage') ?? "ภาษาไทย";
     setState(() {
       selectedLanguage = language;
       stationNames = selectedLanguage == "ภาษาไทย" ? stations : stationsE;
+      datastation =
+          selectedLanguage == "ภาษาไทย" ? "ข้อมูลสถานี" : "Station Info";
+      choose =
+          selectedLanguage == "ภาษาไทย" ? "เลือกเส้นทางรถไฟ" : "Choose route";
+      search = selectedLanguage == "ภาษาไทย"
+          ? "ค้นหาสถานี"
+          : "Search by Station name";
+      Namelinename = selectedLanguage == "ภาษาไทย" ? Nameline : NamelineE;
       filterColor = stationNames.values.first;
       filterStations(filterColor!);
     });
@@ -87,28 +95,39 @@ class _StationDataScreenState extends State<StationDataScreen> {
     'สายสีชมพู': 'สายสีชมพู',
   };
 
+  Map<String, String> NamelineE = {
+    'สายสีเขียว': 'Sukhumvit Line',
+    'สายสีเขียวเข้ม': 'Silom Line',
+    'สายสีน้ำเงิน': 'Blue Line',
+    'สายสีม่วง': 'Purple Line',
+    'สายสีส้ม': 'Airport Rail Link',
+    'สายสีทอง': 'Gold Line',
+    'สายสีแดง': 'Dark Red Line',
+    'สายสีแดงอ่อน': 'Light Red Line',
+    'สายสีเหลือง': 'Yellow Line',
+    'สายสีชมพู': 'Pink Line',
+  };
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initDataFuture, // Wait for the language preference to be loaded
+      future: _initDataFuture,
       builder: (context, snapshot) {
-        // If the data hasn't been loaded yet, show a loading indicator
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Center(child: Text('ข้อมูลสถานี')),
+              title: Center(child: Text(datastation)),
               backgroundColor: Colors.white,
             ),
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // If the data is loaded, display the actual content
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Center(child: Text('ข้อมูลสถานี')),
+            title: Center(child: Text(datastation)),
             backgroundColor: Colors.white,
           ),
           body: Padding(
@@ -117,7 +136,7 @@ class _StationDataScreenState extends State<StationDataScreen> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    labelText: 'ค้นหาสถานี',
+                    labelText: search,
                     labelStyle: TextStyle(color: Colors.grey),
                     prefixIcon: Icon(Icons.search, color: Colors.grey),
                     border: OutlineInputBorder(
@@ -130,7 +149,7 @@ class _StationDataScreenState extends State<StationDataScreen> {
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [Text('เลือกเส้นทางรถไฟ')],
+                  children: [Text(choose)],
                 ),
                 SizedBox(height: 16),
                 SingleChildScrollView(
@@ -173,7 +192,7 @@ class _StationDataScreenState extends State<StationDataScreen> {
                   children: [
                     Text(
                       filterColor != null
-                          ? Nameline[filterColor] ?? ''
+                          ? Namelinename[filterColor] ?? ''
                           : 'กรุณาเลือกสาย',
                       style: TextStyle(fontSize: 18),
                     ),

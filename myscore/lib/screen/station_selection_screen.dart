@@ -11,10 +11,11 @@ class StationSelectionScreen extends StatefulWidget {
 }
 
 class _StationSelectionScreenState extends State<StationSelectionScreen> {
-  String selectedLanguage = "ภาษาไทย"; // Default language
+  String selectedLanguage = "ภาษาไทย";
   String? filterColor;
-  String searchQuery = '';
+  String searchQuery = '', searchT = '', choose = '', search = '';
   late Map<String, String> stationNames;
+  Map<String, String> Namelinename = {};
   List<String> filteredStations = [];
   late Future<void> _initDataFuture;
 
@@ -24,13 +25,19 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
     _initDataFuture = _loadLanguagePreference();
   }
 
-  // Load language preference from SharedPreferences
   Future<void> _loadLanguagePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String language = prefs.getString('selectedLanguage') ?? "ภาษาไทย";
     setState(() {
       selectedLanguage = language;
       stationNames = selectedLanguage == "ภาษาไทย" ? stations : stationsE;
+      searchT = selectedLanguage == "ภาษาไทย" ? "ค้นหาสถานี" : "Search";
+      choose =
+          selectedLanguage == "ภาษาไทย" ? "เลือกเส้นทางรถไฟ" : "Choose route";
+      search = selectedLanguage == "ภาษาไทย"
+          ? "ค้นหาสถานี"
+          : "Search by Station name";
+      Namelinename = selectedLanguage == "ภาษาไทย" ? Nameline : NamelineE;
       filterColor = stationNames.values.first;
       filterStations(filterColor!);
     });
@@ -85,28 +92,39 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
     'สายสีชมพู': 'สายสีชมพู',
   };
 
+  Map<String, String> NamelineE = {
+    'สายสีเขียว': 'Sukhumvit Line',
+    'สายสีเขียวเข้ม': 'Silom Line',
+    'สายสีน้ำเงิน': 'Blue Line',
+    'สายสีม่วง': 'Purple Line',
+    'สายสีส้ม': 'Airport Rail Link',
+    'สายสีทอง': 'Gold Line',
+    'สายสีแดง': 'Dark Red Line',
+    'สายสีแดงอ่อน': 'Light Red Line',
+    'สายสีเหลือง': 'Yellow Line',
+    'สายสีชมพู': 'Pink Line',
+  };
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initDataFuture, // Wait for the language preference to be loaded
+      future: _initDataFuture,
       builder: (context, snapshot) {
-        // If the data hasn't been loaded yet, show a loading indicator
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Center(child: Text('ค้นหาสถานี')),
+              title: Center(child: Text(searchT)),
               backgroundColor: Colors.white,
             ),
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // If the data is loaded, display the actual content
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Center(child: Text('ค้นหาสถานี')),
+            title: Center(child: Text(searchT)),
             backgroundColor: Colors.white,
           ),
           body: Padding(
@@ -115,7 +133,7 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    labelText: 'ค้นหาสถานี',
+                    labelText: search,
                     labelStyle: TextStyle(color: Colors.grey),
                     prefixIcon: Icon(Icons.search, color: Colors.grey),
                     border: OutlineInputBorder(
@@ -128,7 +146,7 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [Text('เลือกเส้นทางรถไฟ')],
+                  children: [Text(choose)],
                 ),
                 SizedBox(height: 16),
                 SingleChildScrollView(
@@ -171,7 +189,7 @@ class _StationSelectionScreenState extends State<StationSelectionScreen> {
                   children: [
                     Text(
                       filterColor != null
-                          ? Nameline[filterColor] ?? ''
+                          ? Namelinename[filterColor] ?? ''
                           : 'กรุณาเลือกสาย',
                       style: TextStyle(fontSize: 18),
                     ),

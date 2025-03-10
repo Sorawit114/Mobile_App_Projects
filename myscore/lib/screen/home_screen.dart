@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myscore/models/stationConnections.dart';
 import 'package:myscore/screen/otherInfo_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screen/station_data_screen.dart';
 import '../screen/station_selection_screen.dart';
 import '../models/station_data.dart';
@@ -165,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeScreenContent extends StatelessWidget {
+class HomeScreenContent extends StatefulWidget {
   final String? fromStation;
   final String? toStation;
   final double fare;
@@ -180,11 +181,38 @@ class HomeScreenContent extends StatelessWidget {
   });
 
   @override
+  _HomeScreenContentState createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<HomeScreenContent> {
+  String selectedLanguage = "ภาษาไทย";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedLanguage = prefs.getString('selectedLanguage') ?? "ภาษาไทย";
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("เลือกเส้นทาง"),
+        title: Text(
+          (selectedLanguage == "ภาษาไทย" ? "เลือกเส้นทาง" : "Choose route"),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
         backgroundColor: Colors.white,
       ),
       body: Padding(
@@ -200,7 +228,7 @@ class HomeScreenContent extends StatelessWidget {
                   ),
                 );
                 if (selectedStation != null) {
-                  onStationSelected(selectedStation, true);
+                  widget.onStationSelected(selectedStation, true);
                 }
               },
               child: Container(
@@ -216,7 +244,10 @@ class HomeScreenContent extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        fromStation ?? 'สถานีต้นทาง',
+                        widget.fromStation ??
+                            (selectedLanguage == "ภาษาไทย"
+                                ? "สถานีต้นทาง"
+                                : "Starting Point"),
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -239,7 +270,7 @@ class HomeScreenContent extends StatelessWidget {
                   ),
                 );
                 if (selectedStation != null) {
-                  onStationSelected(selectedStation, false);
+                  widget.onStationSelected(selectedStation, false);
                 }
               },
               child: Container(
@@ -255,7 +286,10 @@ class HomeScreenContent extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        toStation ?? 'สถานีปลายทาง',
+                        widget.toStation ??
+                            (selectedLanguage == "ภาษาไทย"
+                                ? "สถานีปลายทาง"
+                                : "Destination"),
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -279,7 +313,9 @@ class HomeScreenContent extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'ค่าโดยสาร: ${fare.toStringAsFixed(2)} บาท',
+              (selectedLanguage == "ภาษาไทย"
+                  ? 'ค่าโดยสาร: ${widget.fare.toStringAsFixed(2)} บาท'
+                  : 'Result: ${widget.fare.toStringAsFixed(2)} THB'),
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,

@@ -119,12 +119,10 @@ class MenuItem extends StatelessWidget {
       title: Text(text),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
-        // เมื่อกดที่เมนูนี้จะนำทางไปยังหน้าถัดไป
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                nextScreen, // นำทางไปยังหน้าที่แตกต่างกันตามเมนู
+            builder: (context) => nextScreen,
           ),
         );
       },
