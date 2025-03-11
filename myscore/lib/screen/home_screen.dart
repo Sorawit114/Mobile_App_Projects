@@ -46,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (String fromLine in fromLines) {
       for (String toLine in toLines) {
-        print(fromLine + " " + toLine);
         double fare;
         if (fromLine == toLine) {
           fare = calculateSingleLineFare(fromLine, from, to);
